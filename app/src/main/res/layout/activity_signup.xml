@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <RelativeLayout
+        android:id="@+id/rl_signUp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+
+        <io.punch_it.punchit.RoundedImageView
+            android:id="@+id/iv_signUp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="@string/chooseImage"
+            android:src="@mipmap/user_icon"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="49dp"
+            android:layout_marginTop="49dp"
+            android:background="@color/primary_dark"
+            android:src="@mipmap/email"
+            android:layout_below="@+id/iv_signUp"
+            android:layout_toStartOf="@+id/bt_signUp_signUp" />
+
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="25dp"
+            android:background="@color/primary_dark"
+            android:src="@mipmap/person"
+            android:layout_below="@+id/button"
+            android:layout_alignStart="@+id/imageView6" />
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="36dp"
+            android:background="@color/primary_dark"
+            android:src="@mipmap/peoples"
+            android:layout_below="@+id/imageView7"
+            android:layout_alignStart="@+id/imageView7" />
+
+        <ImageView
+            android:id="@+id/imageView9"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="38dp"
+            android:background="@color/primary_dark"
+            android:src="@mipmap/lock_open"
+            android:layout_below="@+id/imageView8"
+            android:layout_alignStart="@+id/imageView8" />
+
+        <ImageView
+            android:id="@+id/imageView10"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="44dp"
+            android:background="@color/primary_dark"
+            android:src="@mipmap/lock_close"
+            android:layout_below="@+id/imageView9"
+            android:layout_alignStart="@+id/imageView9" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/view2"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imageView6"
+            android:layout_toEndOf="@+id/imageView6">
+
+            <EditText
+                android:id="@+id/et_emailId_signUp"
+                android:layout_width="200dp"
+                android:textColor="#000"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/tv_or"
+                android:layout_marginTop="20dp"
+                android:hint="@string/emailOnly"
+                android:inputType="textEmailAddress" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/editText"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imageView7"
+            android:layout_alignStart="@+id/view2">
+
+            <EditText
+                android:id="@+id/et_ninjaName_signUp"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/imageView7"
+                android:textColor="#000"
+                android:layout_alignStart="@+id/view2"
+                android:layout_alignTop="@+id/imageView7"
+                android:hint="@string/ninja_name"
+                android:inputType="text" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <RadioGroup
+            android:id="@+id/rg_gender"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/imageView8"
+            android:layout_alignEnd="@+id/editText"
+            android:layout_alignTop="@+id/imageView8"
+            android:layout_toEndOf="@+id/imageView6"
+            android:checkedButton="@+id/rb_boy"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_boy"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:text="@string/male" />
+
+
+            <RadioButton
+                android:id="@+id/rb_girl"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:text="@string/female" />
+
+        </RadioGroup>
+
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imageView9"
+            android:layout_toEndOf="@+id/imageView6"
+            android:layout_above="@+id/radioGroup2"
+            android:id="@+id/view3">
+
+            <EditText
+                android:id="@+id/et_pass1_signUp"
+                android:layout_width="200dp"
+                android:textColor="#000"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/imageView7"
+                android:layout_alignStart="@+id/view2"
+                android:layout_alignTop="@+id/imageView7"
+                android:hint="@string/password"
+                android:inputType="textPassword" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imageView11"
+            android:layout_toEndOf="@+id/imageView6"
+            android:id="@+id/button">
+
+            <EditText
+                android:id="@+id/et_name_signUp"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:layout_alignBottom="@+id/imageView7"
+                android:layout_alignStart="@+id/view2"
+                android:layout_alignTop="@+id/imageView7"
+                android:hint="@string/name"
+                android:inputType="textPassword" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/radioGroup2"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imageView10"
+            android:layout_alignStart="@+id/view3">
+
+            <EditText
+                android:id="@+id/et_pass2_signUp"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:layout_alignBottom="@+id/imageView7"
+                android:layout_alignStart="@+id/view2"
+                android:layout_alignTop="@+id/imageView7"
+                android:hint="@string/confirm_password"
+                android:inputType="textPassword" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/bt_signUp_signUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/radioGroup2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="26dp"
+            android:background="@color/primary_dark"
+            android:text="@string/signUp" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imageView11"
+            android:src="@mipmap/person"
+            android:background="@color/primary_dark"
+            android:layout_below="@+id/view2"
+            android:layout_alignStart="@+id/imageView7"
+            android:layout_marginTop="26dp" />
+
+
+    </RelativeLayout>
+</ScrollView>

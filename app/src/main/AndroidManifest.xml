@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="io.punch_it.punchit">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:name="io.punch_it.punchit.ParseApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:theme="@style/SplashScreenTheme"
+            android:name=".MainActivity"
+            android:noHistory="true"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".welcome"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity
+            android:name=".LoginSignupActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity
+            android:name=".SIgnup"
+            android:label="@string/app_name"
+            android:parentActivityName=".LoginSignupActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".Fbninja"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity android:name=".MainFiveFragmentDisplay"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name">
+
+        </activity>
+
+        <activity
+            android:name=".demo"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".abc"
+            android:label="@string/app_name">
+
+        </activity>
+
+        <activity android:name=".MainPunch"
+            android:label="@string/app_name"
+            android:parentActivityName=".MainFiveFragmentDisplay"
+            >
+
+        </activity>
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/app_id" />
+
+    </application>
+
+</manifest>

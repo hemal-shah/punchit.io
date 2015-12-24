@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Punchit.io</string>
+    <string name="title_activity_welcome">welcome</string>
+    <string name="title_activity_textview">textview</string>
+    <string name="app_id">1008754019190668</string>
+    <string name="title_activity_fbninja">fbninja</string>
+    <string name="optionsNext">Next></string>
+    <string name="Interest">Interest</string>
+    <string name="tagline">Where your opinion matters!</string>
+    <string name="fb_login">Facebook Login</string>
+    <string name="or">Or</string>
+    <string name="emailId">Email-Id or Username</string>
+    <string name="password">Password</string>
+    <string name="forget_password">Forget Password?</string>
+    <string name="login">Login</string>
+    <string name="signUp">Sign Up</string>
+    <string name="randomText">Random text</string>
+    <string name="add">Add</string>
+    <string name="chooseImage">Choose Image</string>
+    <string name="emailOnly">Email-Id</string>
+    <string name="ninja_name">Ninja Name</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="name">Name</string>
+</resources>
