@@ -5,17 +5,25 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+
+import com.parse.ParseCloud;
+
+import java.util.List;
 
 /**
  * Created by hemal on 12/22/15.
  */
 public class MainPunch extends AppCompatActivity {
 
-    private final static String TAG = MainPunch.class.getSimpleName();
+
     ActionBar actionBar;
 
     @Override
