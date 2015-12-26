@@ -1,46 +1,45 @@
 package io.punch_it.punchit;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.drawable.Icon;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
-/**
- * Created by hemal on 12/24/15.
- */
-public class MyRecyclerAdapterHome  extends RecyclerView.Adapter<MyRecyclerAdapterHome.CustomViewHolder> implements View.OnClickListener {
+public class MyRecyclerAdapterHome extends RecyclerView.Adapter<MyRecyclerAdapterHome.CustomViewHolder> {
 
     private ArrayList<HomeFeed> list;
+    private FeedButtonEvents mFeedButtonEvents;
+    CustomViewHolder customViewHolder;
     private Context context;
 
-    public MyRecyclerAdapterHome(Context context, ArrayList<HomeFeed> list){
+    private static final String TAG = MyRecyclerAdapterHome.class.getSimpleName();
+
+    public MyRecyclerAdapterHome(Context context, ArrayList<HomeFeed> list) {
         this.context = context;
         this.list = list;
     }
 
-
+    public void setClickListener(FeedButtonEvents feedButtonEvents) {
+        this.mFeedButtonEvents = feedButtonEvents;
+    }
 
     @Override
     public CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_row_home, null);
-        CustomViewHolder customViewHolder = new CustomViewHolder(view);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_row_home, parent, false);
+        customViewHolder = new CustomViewHolder(view);
         return customViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(CustomViewHolder holder, int position) {
+    public void onBindViewHolder(CustomViewHolder holder, final int position) {
         //TODO set all the received contents here....
         HomeFeed singleFeed = list.get(position);
 
@@ -54,9 +53,32 @@ public class MyRecyclerAdapterHome  extends RecyclerView.Adapter<MyRecyclerAdapt
         holder.tv_comment.setText(singleFeed.getComment());
         holder.post1.setBackgroundResource(R.mipmap.punchit_main);
         holder.post2.setBackgroundResource(R.mipmap.user_icon);
-        holder.iv_share.setOnClickListener(this);
-        holder.iv_comment.setOnClickListener(this);
-        holder.iv_spam.setOnClickListener(this);
+
+        holder.iv_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, "share it here", Snackbar.LENGTH_SHORT).show();
+                if (mFeedButtonEvents != null)
+                    mFeedButtonEvents.shareFeed(position);
+            }
+        });
+
+        holder.iv_comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, "Comments section", Snackbar.LENGTH_SHORT).show();
+                if (mFeedButtonEvents != null)
+                    mFeedButtonEvents.commentPage(position);
+            }
+        });
+
+        holder.iv_spam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mFeedButtonEvents != null)
+                    mFeedButtonEvents.reportSpam(position);
+            }
+        });
     }
 
     @Override
@@ -64,25 +86,7 @@ public class MyRecyclerAdapterHome  extends RecyclerView.Adapter<MyRecyclerAdapt
         return (list != null ? list.size() : 0);
     }
 
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        switch (id){
-            case R.id.iv_spam:
-                Snackbar.make(v, "Reporting spam...",Snackbar.LENGTH_SHORT).show();
-                break;
-            case R.id.iv_share:
-                Snackbar.make(v, "share it here", Snackbar.LENGTH_SHORT).show();
-                break;
-            case R.id.iv_comment:
-                Snackbar.make(v, "Comments section", Snackbar.LENGTH_SHORT).show();
-                break;
-            default:
-                break;
-        }
-    }
-
-    public class CustomViewHolder extends RecyclerView.ViewHolder{
+    public class CustomViewHolder extends RecyclerView.ViewHolder {
 
         RoundedImageView imageView;
         TextView tv_home, tv_time_home, tv_question, tv_first_post, tv_second_post, tv_user_id, tv_comment;
@@ -107,4 +111,13 @@ public class MyRecyclerAdapterHome  extends RecyclerView.Adapter<MyRecyclerAdapt
             this.iv_spam = (ImageView) view.findViewById(R.id.iv_spam);
         }
     }
+
+    public interface FeedButtonEvents {
+        void reportSpam(int position);
+
+        void shareFeed(int position);
+
+        void commentPage(int position);
+    }
+
 }

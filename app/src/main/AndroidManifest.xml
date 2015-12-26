@@ -26,12 +26,6 @@
         </activity>
 
         <activity
-            android:name=".welcome"
-            android:screenOrientation="portrait">
-
-        </activity>
-
-        <activity
             android:name=".LoginSignupActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
@@ -45,12 +39,7 @@
             android:screenOrientation="portrait">
 
         </activity>
-        <activity
-            android:name=".Fbninja"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
 
-        </activity>
 
         <activity android:name=".MainFiveFragmentDisplay"
             android:screenOrientation="portrait"
@@ -73,6 +62,12 @@
         <activity android:name=".MainPunch"
             android:label="@string/app_name"
             android:parentActivityName=".MainFiveFragmentDisplay"
+            >
+
+        </activity>
+
+        <activity android:name=".SampleCommentsPage"
+            android:label="@string/app_name"
             >
 
         </activity>

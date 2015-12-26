@@ -7,6 +7,7 @@ import android.view.View;
 /**
  * Created by hemal on 12/25/15.
  */
+
 public class SpacesHomeFeed extends RecyclerView.ItemDecoration {
     int mSpace;
     public SpacesHomeFeed(int mSpace){
