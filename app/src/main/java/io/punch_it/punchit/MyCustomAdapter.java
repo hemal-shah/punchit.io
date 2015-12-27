@@ -9,7 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.view.View;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
+
+import com.facebook.internal.InternalSettings;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -22,7 +26,7 @@ import java.util.List;
 
 public class MyCustomAdapter extends ArrayAdapter<InterestItems> {
     private static final String TAG = MyCustomAdapter.class.getSimpleName();
-    private ArrayList<InterestItems> list = null;
+    private ArrayList<InterestItems> list = null, filteredData;
     private Context context;
     private int layoutResource;
     private ParseUser user = ParseUser.getCurrentUser();
@@ -31,13 +35,51 @@ public class MyCustomAdapter extends ArrayAdapter<InterestItems> {
         super(context, layoutResource, list);
         this.context = context;
         this.list = list;
+        this.filteredData = list;
         this.layoutResource = layoutResource;
     }
 
     @Override
     public int getCount() {
-        return list.size();
+        return filteredData.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults results = new FilterResults();
+
+                if(constraint == null || constraint.length() == 0){
+                    results.values = list;
+                    results.count = list.size();
+                }else{
+                    ArrayList<InterestItems> filterResultsData = new ArrayList<>();
+                    for(InterestItems data:list){
+                        if(data.getInterestName().toLowerCase().startsWith(constraint.toString().toLowerCase())){
+                            Log.i(TAG, "Match found..");
+                            filterResultsData.add(data);
+                        }
+                    }
+                    results.values = filterResultsData;
+                    results.count = filterResultsData.size();
+                }
+
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+
+                filteredData = (ArrayList<InterestItems>) results.values ;
+                Log.i(TAG, filteredData.toString());
+                notifyDataSetChanged();
+            }
+        };
+    }
+
+
 
     @Override
     public long getItemId(int position) {
@@ -49,6 +91,10 @@ public class MyCustomAdapter extends ArrayAdapter<InterestItems> {
 
     }
 
+    public InterestItems getItem(int position){
+        return filteredData.get(position);
+    }
+
     public class ViewHolder {
         TextView tv_interest_name;
         SwitchCompat switchCompat;
@@ -58,6 +104,7 @@ public class MyCustomAdapter extends ArrayAdapter<InterestItems> {
     public View getView(final int position, View convertView, ViewGroup parent) {
 
         ViewHolder holder;
+        final InterestItems temp;
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(context);
             convertView = inflater.inflate(layoutResource, null, false);
@@ -71,15 +118,16 @@ public class MyCustomAdapter extends ArrayAdapter<InterestItems> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.tv_interest_name.setText(list.get(position).getInterestName());
-        holder.switchCompat.setChecked(list.get(position).isInterested());
+        temp = getItem(position);
+        holder.tv_interest_name.setText(temp.getInterestName());
+        holder.switchCompat.setChecked(temp.isInterested());
 
         //Changing the contents through switch from here..
 
         holder.switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                String name = list.get(position).getInterestName();
+                String name = temp.getInterestName();
                 Log.i(TAG,name);
                 ParseQuery<ParseObject> query;
                 ParseObject obj, userInterest;
@@ -96,7 +144,7 @@ public class MyCustomAdapter extends ArrayAdapter<InterestItems> {
                             @Override
                             public void done(ParseException e) {
                                 Log.i(TAG, "Saved content....");
-                                list.get(position).setIsInterested(true);
+                                temp.setIsInterested(true);
                             }
                         });
                     } catch (ParseException e) {

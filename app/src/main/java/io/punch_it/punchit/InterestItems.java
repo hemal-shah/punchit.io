@@ -14,11 +14,6 @@ public class InterestItems {
 
     public String getInterestName() {
         return interestName;
-
-    }
-
-    public void setInterestName(String interestName) {
-        this.interestName = interestName;
     }
 
     public boolean isInterested() {

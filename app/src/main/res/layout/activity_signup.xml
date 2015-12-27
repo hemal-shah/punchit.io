@@ -16,6 +16,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:contentDescription="@string/chooseImage"
+            android:scaleType="fitXY"
             android:src="@mipmap/user_icon"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
@@ -177,7 +178,7 @@
                 android:layout_alignStart="@+id/view2"
                 android:layout_alignTop="@+id/imageView7"
                 android:hint="@string/name"
-                android:inputType="textPassword" />
+                android:inputType="text" />
 
         </android.support.design.widget.TextInputLayout>
 

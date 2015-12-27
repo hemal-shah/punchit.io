@@ -1,6 +1,9 @@
 package io.punch_it.punchit;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -12,7 +15,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 public class Home extends Fragment implements MyRecyclerAdapterHome.FeedButtonEvents {
 
@@ -21,15 +34,21 @@ public class Home extends Fragment implements MyRecyclerAdapterHome.FeedButtonEv
     private RecyclerView mRecyclerView;
     private ArrayList<HomeFeed> feedsList = new ArrayList<>();
     private MyRecyclerAdapterHome adapter;
+    private SpacesHomeFeed spacesHomeFeed;
+    private ProgressDialog progressDialog;
+    HomeFeed object;
+    String[] interest;
+    SharedPreferences sp;
 
-
-    public Home(){
+    public Home() {
         //Required for now
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sp = getActivity().getSharedPreferences("UserFirstTime", Context.MODE_PRIVATE);
+        interest = sp.getString("UserInterest", "").split(",");
     }
 
     @Override
@@ -38,27 +57,72 @@ public class Home extends Fragment implements MyRecyclerAdapterHome.FeedButtonEv
         View v = inflater.inflate(R.layout.home_fragment, container, false);
         mRecyclerView = (RecyclerView) v.findViewById(R.id.recyclerView_home);
 
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
+        return v;
+    }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("Posts");
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setIndeterminate(true);
+        progressDialog.show();
+        query.setLimit(10);
+        query.whereContainedIn("TargetIntrests", Arrays.asList(interest));
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> feedList, ParseException e) {
+                if (e == null) {
+                    Log.i(TAG, String.valueOf(feedList.size()));
+                    for (ParseObject singleFeed : feedList) {
+                        String question = singleFeed.get("Title").toString();
+                        Date date = singleFeed.getCreatedAt();
+                        ParseUser user = (ParseUser) singleFeed.get("By");
+                        String name = null;
+                        try {
+                            name = user.fetchIfNeeded().getString("Ninja_name");
+                        } catch (ParseException e1) {
+                            e1.printStackTrace();
+                        }
+                        String post1 = singleFeed.get("Image1Title").toString();
+                        String post2 = singleFeed.get("Image2Title").toString();
+
+                        @SuppressWarnings("unchecked")
+                        ArrayList<String> numberOfLikes1 = (ArrayList<String>) singleFeed.get("Punchers1");
+
+                        @SuppressWarnings("unchecked")
+                        ArrayList<String> numberOfLikes2 = (ArrayList<String>) singleFeed.get("Punchers2");
+
+                        int like1 = (numberOfLikes1 != null)? numberOfLikes1.size():0;
+                        int like2 = (numberOfLikes2 != null)? numberOfLikes2.size():0;
+
+                        object = new HomeFeed(name, question, post1, post2, "Sample comment", date, like1, like2);
+                        feedsList.add(object);
+                    }
+                } else {
+                    Snackbar.make(getView(), "Network Problems!", Snackbar.LENGTH_SHORT).show();
+                }
+                progressDialog.hide();
             }
+
         });
 
-        SpacesHomeFeed spacesHomeFeed = new SpacesHomeFeed(16);
+        spacesHomeFeed = new SpacesHomeFeed(16);
         adapter = new MyRecyclerAdapterHome(getActivity(), feedsList);
         adapter.setClickListener(this);
         mRecyclerView.addItemDecoration(spacesHomeFeed);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(adapter);
-        return v;
     }
 
     @Override
     public void reportSpam(int position) {
         Snackbar.make(mRecyclerView, "Reporting Spam!", Snackbar.LENGTH_SHORT).show();
-        if(feedsList != null)
+        if (feedsList != null)
             feedsList.remove(position);
         adapter.notifyItemRemoved(position);
         Snackbar.make(mRecyclerView, "Reported!", Snackbar.LENGTH_SHORT).show();
@@ -67,14 +131,14 @@ public class Home extends Fragment implements MyRecyclerAdapterHome.FeedButtonEv
     @Override
     public void shareFeed(int position) {
         Intent intent = new Intent(getContext(), SampleCommentsPage.class);
-        intent.putExtra("Position", position+" clicked for sharing.....");
+        intent.putExtra("Position", position + " clicked for sharing.....");
         startActivity(intent);
     }
 
     @Override
     public void commentPage(int position) {
         Intent intent = new Intent(getContext(), SampleCommentsPage.class);
-        intent.putExtra("Position", position+" clicked for comments.....");
+        intent.putExtra("Position", position + " clicked for comments.....");
         startActivity(intent);
     }
 }

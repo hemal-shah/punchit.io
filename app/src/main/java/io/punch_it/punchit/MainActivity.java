@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
                     MainActivity.this.finish();
                 } else {
                     if (currentUser != null) {
+                        //TODO optimize sign in...
                         Intent intent = new Intent(MainActivity.this, abc.class);
                         intent.putExtra("ActivityName", TAG);
                         startActivity(intent);

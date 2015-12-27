@@ -13,6 +13,13 @@
         android:background="?attr/colorPrimary"
         app:layout_scrollFlags="scroll|enterAlways" />
 
+    <EditText android:id="@+id/inputSearch"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000"
+        android:hint="@string/search"
+        android:inputType="textVisiblePassword"/>
+
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">

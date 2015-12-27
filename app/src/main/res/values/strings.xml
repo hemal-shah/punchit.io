@@ -2,7 +2,7 @@
     <string name="app_name">Punchit.io</string>
     <string name="title_activity_welcome">welcome</string>
     <string name="title_activity_textview">textview</string>
-    <string name="app_id">1008754019190668</string>
+    <string name="app_id">811805505603331</string>
     <string name="title_activity_fbninja">fbninja</string>
     <string name="optionsNext">Next></string>
     <string name="Interest">Interest</string>
@@ -24,4 +24,5 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="name">Name</string>
     <string name="time">TimeHere</string>
+    <string name="search">Search Interest..</string>
 </resources>

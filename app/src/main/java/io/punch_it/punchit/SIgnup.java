@@ -12,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,8 +20,12 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 
 
 public class SIgnup extends AppCompatActivity implements View.OnClickListener, TextWatcher {
@@ -31,8 +36,10 @@ public class SIgnup extends AppCompatActivity implements View.OnClickListener, T
     String name, email, pass1, pass2, genderText, ninjaName;
     RadioGroup genderGroup;
     Button finalButton;
+    Bitmap bitmap;
     ImageView chooseImage;
     private int char_limit = 20;
+    private static final String TAG = SIgnup.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,10 +86,7 @@ public class SIgnup extends AppCompatActivity implements View.OnClickListener, T
         Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         pickIntent.setType("image/*");
 
-        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
-
-        startActivityForResult(chooserIntent, PICK_IMAGE);
+        startActivityForResult(Intent.createChooser(getIntent, "Select Image"), PICK_IMAGE);
     }
 
     private void finallySignIn() {
@@ -95,14 +99,14 @@ public class SIgnup extends AppCompatActivity implements View.OnClickListener, T
 
 
         try {
-            if (email.equals("") || pass1.trim().equals("") || pass2.equals("") || ninjaName.equals("")) {
+            if (email.equals("") || pass1.trim().equals("") || pass2.equals("") || ninjaName.equals("")||bitmap==null) {
                 Snackbar.make(findViewById(R.id.rl_signUp), "Fill all details.", Snackbar.LENGTH_SHORT).show();
             } else {
 
                 if (pass1.equals(pass2)) {
                     final ParseUser user = new ParseUser();
                     user.setUsername(email);
-                    user.put("Full_name", name);
+                    user.put("Name", name);
                     user.setPassword(pass1);
                     user.setEmail(email);
                     user.put("Ninja_name", ninjaName);
@@ -114,10 +118,12 @@ public class SIgnup extends AppCompatActivity implements View.OnClickListener, T
                             if (e == null) {
                                 user.saveInBackground();
                                 Snackbar.make(findViewById(R.id.rl_signUp), "Successfully signed in!", Snackbar.LENGTH_SHORT).show();
+                                saveBitmapToParse(bitmap);
                                 Intent intent = new Intent(SIgnup.this, abc.class);
                                 startActivity(intent);
                                 SIgnup.this.finish();
                             } else {
+                                Log.i(TAG, e.toString());
                                 Snackbar.make(findViewById(R.id.rl_signUp), "Sign-Up Error!", Snackbar.LENGTH_SHORT).show();
                             }
                         }
@@ -133,55 +139,55 @@ public class SIgnup extends AppCompatActivity implements View.OnClickListener, T
 
     }
 
-    public static int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
+    private void decodeImage(final String path) {
+        int targetW = 100;
+        int targetH = 100;
 
-        if (height > reqHeight || width > reqWidth) {
-            if (width > height) {
-                inSampleSize = Math.round((float)height / (float)reqHeight);
-            } else {
-                inSampleSize = Math.round((float)width / (float)reqWidth);
-            }
-        }
-        return inSampleSize;
+        final BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+        bitmap = BitmapFactory.decodeFile(path, bmOptions);
+        chooseImage.setImageBitmap(bitmap);
     }
 
-    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
-
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(res, resId, options);
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-        options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeResource(res, resId, options);
+    private void saveBitmapToParse(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] image = stream.toByteArray();
+        ParseFile file = new ParseFile("propic.png", image);
+        ParseUser user = ParseUser.getCurrentUser();
+        user.put("ProfilePicture", file);
+        user.saveInBackground();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        try {
-            if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null) {
+        if(requestCode == PICK_IMAGE){
+            if(resultCode == RESULT_OK){
+                String yourSelectedImage;
                 Uri selectedImage = data.getData();
-                String[] filePathColumn = { MediaStore.Images.Media.DATA };
-                Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-                if(cursor != null && cursor.moveToNext()) {
-                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                    String imgDecodableString = cursor.getString(columnIndex);
-                    cursor.close();
-                    chooseImage.setImageBitmap(decodeSampledBitmapFromResource(getResources(), Integer.parseInt(imgDecodableString), 100, 100));
-                }else{
-                    Snackbar.make(findViewById(R.id.rl_signUp), "Problem!", Snackbar.LENGTH_SHORT).show();
+                String[] filePath = { MediaStore.Images.Media.DATA };
+                Cursor c = getContentResolver().query(selectedImage, filePath,
+                        null, null, null);
+                c.moveToFirst();
+                int columnIndex = c.getColumnIndex(filePath[0]);
+                yourSelectedImage = c.getString(columnIndex);
+                c.close();
+                if (yourSelectedImage!= null) {
+                    Log.v("Image", yourSelectedImage);
+                    decodeImage(yourSelectedImage);
                 }
-            } else {
-                Snackbar.make(findViewById(R.id.rl_signUp), "Error in Image Selection.", Snackbar.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            Snackbar.make(findViewById(R.id.rl_signUp), "Something went wrong!", Snackbar.LENGTH_SHORT).show();
-        }
 
+            }
+        }
     }
 
     @Override

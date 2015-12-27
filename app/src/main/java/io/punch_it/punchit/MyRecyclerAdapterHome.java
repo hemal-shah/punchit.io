@@ -3,15 +3,15 @@ package io.punch_it.punchit;
 import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MyRecyclerAdapterHome extends RecyclerView.Adapter<MyRecyclerAdapterHome.CustomViewHolder> {
 
@@ -38,21 +38,57 @@ public class MyRecyclerAdapterHome extends RecyclerView.Adapter<MyRecyclerAdapte
         return customViewHolder;
     }
 
+    public String getTimeInFormat(Date d){
+        int hours = d.getHours();
+        int min  = d.getMinutes();
+        int month = d.getMonth();
+        int day = d.getDay();
+
+        Calendar current = Calendar.getInstance();
+        int currentHours = current.get(Calendar.HOUR_OF_DAY);
+        int currentMin = current.get(Calendar.MINUTE);
+        int currentMonth = current.get(Calendar.MONTH);
+        int currentDay = current.get(Calendar.DAY_OF_WEEK);
+
+        String time;
+
+        if(Math.abs(currentMonth - month) == 0){
+            if(Math.abs(currentDay - day) > 7){
+                time = (Math.abs(currentDay - day)/7) + "W";
+            }
+            else if(Math.abs(currentDay - day) > 0){
+                time = Math.abs(currentDay - day) + "d";
+            }
+            else if(Math.abs(currentHours - hours) > 0){
+                time = Math.abs(currentHours - hours) + "h";
+            }
+            else {
+                time = Math.abs(currentMin - min) + "m";
+            }
+        }else{
+            time = Math.abs(currentMonth - month) + "M";
+        }
+
+        return time;
+    }
+
     @Override
     public void onBindViewHolder(CustomViewHolder holder, final int position) {
         //TODO set all the received contents here....
         HomeFeed singleFeed = list.get(position);
 
+        String time = getTimeInFormat(singleFeed.getDate());
+
         holder.imageView.setImageResource(R.mipmap.user_icon);
         holder.tv_home.setText(singleFeed.getUser());
-        holder.tv_time_home.setText(singleFeed.getTime());
+        holder.tv_time_home.setText(time);
         holder.tv_question.setText(singleFeed.getQuestion());
         holder.tv_first_post.setText(singleFeed.getFirst_post());
         holder.tv_second_post.setText(singleFeed.getSecond_post());
-        holder.tv_user_id.setText(singleFeed.getUser());
-        holder.tv_comment.setText(singleFeed.getComment());
-        holder.post1.setBackgroundResource(R.mipmap.punchit_main);
-        holder.post2.setBackgroundResource(R.mipmap.user_icon);
+        holder.tv_likes_1.setText(String.valueOf(singleFeed.getLikesIn1()));
+        holder.tv_likes_2.setText(String.valueOf(singleFeed.getLikesIn2()));
+        holder.iv_post1.setImageResource(R.mipmap.punchit_main);
+        holder.iv_post2.setImageResource(R.mipmap.user_icon);
 
         holder.iv_share.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,9 +125,8 @@ public class MyRecyclerAdapterHome extends RecyclerView.Adapter<MyRecyclerAdapte
     public class CustomViewHolder extends RecyclerView.ViewHolder {
 
         RoundedImageView imageView;
-        TextView tv_home, tv_time_home, tv_question, tv_first_post, tv_second_post, tv_user_id, tv_comment;
-        LinearLayout post1, post2;
-        ImageView iv_share, iv_comment, iv_spam;
+        TextView tv_home, tv_time_home, tv_question, tv_first_post, tv_second_post, tv_likes_1, tv_likes_2;
+        ImageView iv_post1, iv_post2, iv_share, iv_comment, iv_spam;
 
         public CustomViewHolder(View view) {
             super(view);
@@ -102,12 +137,12 @@ public class MyRecyclerAdapterHome extends RecyclerView.Adapter<MyRecyclerAdapte
             this.tv_question = (TextView) view.findViewById(R.id.tv_question_home);
             this.tv_first_post = (TextView) view.findViewById(R.id.tv_first_post);
             this.tv_second_post = (TextView) view.findViewById(R.id.tv_second_post);
-            this.tv_user_id = (TextView) view.findViewById(R.id.tv_user_id);
-            this.tv_comment = (TextView) view.findViewById(R.id.tv_comment);
-            this.post1 = (LinearLayout) view.findViewById(R.id.ll_post1);
-            this.post2 = (LinearLayout) view.findViewById(R.id.ll_post2);
+            this.tv_likes_1 = (TextView) view.findViewById(R.id.tv_likes_1);
+            this.tv_likes_2 = (TextView) view.findViewById(R.id.tv_likes_2);
             this.iv_share = (ImageView) view.findViewById(R.id.iv_share);
             this.iv_comment = (ImageView) view.findViewById(R.id.iv_comment);
+            this.iv_post1 = (ImageView) view.findViewById(R.id.iv_post1);
+            this.iv_post2 = (ImageView) view.findViewById(R.id.iv_post2);
             this.iv_spam = (ImageView) view.findViewById(R.id.iv_spam);
         }
     }
