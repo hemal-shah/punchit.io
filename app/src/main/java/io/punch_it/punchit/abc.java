@@ -62,10 +62,11 @@ public class abc extends AppCompatActivity implements View.OnClickListener {
         setUpActivity();
 
 
-        SharedPreferences sp = getSharedPreferences("UserFirstTime", Context.MODE_PRIVATE);
-        addItemstoSharedPreferences();
+        final SharedPreferences sp = getSharedPreferences("UserFirstTime", Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sp.edit();
         isFirstTime = sp.getBoolean("FirstTimeLoggedIn", true);
         if (!isFirstTime) {
+            editor.putString("UserInterest", getInterestItems());
             startActivity(new Intent(abc.this, MainFiveFragmentDisplay.class));
             abc.this.finish();
         }
@@ -76,24 +77,20 @@ public class abc extends AppCompatActivity implements View.OnClickListener {
                                @Override
                                public void run() {
                                    try {
-                                       SharedPreferences sp = getSharedPreferences("UserFirstTime", Context.MODE_PRIVATE);
-                                       SharedPreferences.Editor editor = sp.edit();
                                        List<ParseObject> InterestList = query.find();
                                        for (ParseObject singleItem : InterestList) {
                                            boolean interested = false;
                                            String name = singleItem.get("IntrestText").toString();
                                            List<String> interest = Arrays.asList(sp.getString("UserInterest", "").split(","));
-                                           Log.i(TAG, interest.toString());
-                                           if(interest.contains(name)){
-                                               Log.i(TAG, "is already interest... for "+name);
+                                           if (interest.contains(name)){
                                                interested = true;
                                            }
                                            singleInterest = new InterestItems(name, interested);
                                            list.add(singleInterest);
                                            //TODO check if following gives error at runtime...
-                                           adapter = new MyCustomAdapter(abc.this, R.layout.my_custom_list_layout, list);
-                                           lView.setAdapter(adapter);
                                        }
+                                       adapter = new MyCustomAdapter(abc.this, R.layout.my_custom_list_layout, list);
+                                       lView.setAdapter(adapter);
                                        editor.putBoolean("FirstTimeLoggedIn", false);
                                        editor.apply();
                                    } catch (ParseException e) {
@@ -143,7 +140,6 @@ public class abc extends AppCompatActivity implements View.OnClickListener {
         int id = item.getItemId();
         switch (id) {
             case R.id.menu_next_list_view:
-                addItemstoSharedPreferences();
                 startActivity(new Intent(abc.this, MainFiveFragmentDisplay.class));
                 abc.this.finish();
                 break;
@@ -153,23 +149,20 @@ public class abc extends AppCompatActivity implements View.OnClickListener {
         return false;
     }
 
+    public String getInterestItems(){
+        final StringBuilder sb = new StringBuilder();
 
-    public void addItemstoSharedPreferences(){
-        SharedPreferences sp = getSharedPreferences("UserFirstTime",Context.MODE_PRIVATE);
-        final SharedPreferences.Editor editor = sp.edit();
         ParseCloud.callFunctionInBackground("GetUserIntrest", new HashMap<String, Object>(), new FunctionCallback<Object>() {
             @Override
             public void done(Object o, ParseException e) {
                 @SuppressWarnings("unchecked")
                 ArrayList<String> list = (ArrayList<String>) o;
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < list.size(); i++) {
-                    sb.append(list.get(i)).append(",");
+                for (String string : list) {
+                    sb.append(string).append(",");
                 }
-                editor.putString("UserInterest", sb.toString());
-                editor.apply();
             }
         });
+        return (sb.length() == 0)?"":sb.toString();
     }
 
 

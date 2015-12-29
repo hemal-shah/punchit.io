@@ -1,5 +1,7 @@
 package io.punch_it.punchit;
 
+import com.parse.ParseFile;
+
 import java.util.Date;
 
 /**
@@ -9,8 +11,9 @@ public class HomeFeed {
     String user, question, first_post, second_post, comment;
     Date date;
     int likesIn1, likesIn2;
+    ParseFile image1, image2, profilePicture;
 
-    public HomeFeed(String user, String question, String first_post, String second_post, String comment, Date date, int likesIn1, int likesIn2) {
+    public HomeFeed(String user, String question, String first_post, String second_post, String comment, Date date, int likesIn1, int likesIn2, ParseFile image1, ParseFile image2, ParseFile profilePicture) {
         this.user = user;
         this.question = question;
         this.first_post = first_post;
@@ -19,6 +22,33 @@ public class HomeFeed {
         this.date = date;
         this.likesIn1 = likesIn1;
         this.likesIn2 = likesIn2;
+        this.image1 = image1;
+        this.image2 = image2;
+        this.profilePicture = profilePicture;
+    }
+
+    public ParseFile getImage1() {
+        return image1;
+    }
+
+    public void setImage1(ParseFile image1) {
+        this.image1 = image1;
+    }
+
+    public ParseFile getImage2() {
+        return image2;
+    }
+
+    public void setImage2(ParseFile image2) {
+        this.image2 = image2;
+    }
+
+    public ParseFile getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(ParseFile profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public String getUser() {

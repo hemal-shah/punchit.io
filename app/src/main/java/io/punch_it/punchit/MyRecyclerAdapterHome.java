@@ -1,14 +1,24 @@
 package io.punch_it.punchit;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.parse.GetDataCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,9 +48,9 @@ public class MyRecyclerAdapterHome extends RecyclerView.Adapter<MyRecyclerAdapte
         return customViewHolder;
     }
 
-    public String getTimeInFormat(Date d){
+    public String getTimeInFormat(Date d) {
         int hours = d.getHours();
-        int min  = d.getMinutes();
+        int min = d.getMinutes();
         int month = d.getMonth();
         int day = d.getDay();
 
@@ -52,20 +62,17 @@ public class MyRecyclerAdapterHome extends RecyclerView.Adapter<MyRecyclerAdapte
 
         String time;
 
-        if(Math.abs(currentMonth - month) == 0){
-            if(Math.abs(currentDay - day) > 7){
-                time = (Math.abs(currentDay - day)/7) + "W";
-            }
-            else if(Math.abs(currentDay - day) > 0){
+        if (Math.abs(currentMonth - month) == 0) {
+            if (Math.abs(currentDay - day) > 7) {
+                time = (Math.abs(currentDay - day) / 7) + "W";
+            } else if (Math.abs(currentDay - day) > 0) {
                 time = Math.abs(currentDay - day) + "d";
-            }
-            else if(Math.abs(currentHours - hours) > 0){
+            } else if (Math.abs(currentHours - hours) > 0) {
                 time = Math.abs(currentHours - hours) + "h";
-            }
-            else {
+            } else {
                 time = Math.abs(currentMin - min) + "m";
             }
-        }else{
+        } else {
             time = Math.abs(currentMonth - month) + "M";
         }
 
@@ -79,7 +86,13 @@ public class MyRecyclerAdapterHome extends RecyclerView.Adapter<MyRecyclerAdapte
 
         String time = getTimeInFormat(singleFeed.getDate());
 
-        holder.imageView.setImageResource(R.mipmap.user_icon);
+        try {
+            new DownloadImageTask(holder.imageView)
+                    .execute(singleFeed.getProfilePicture().getUrl());
+        } catch (Exception e) {
+            Log.d("MyApp", e.toString());
+        }
+
         holder.tv_home.setText(singleFeed.getUser());
         holder.tv_time_home.setText(time);
         holder.tv_question.setText(singleFeed.getQuestion());
@@ -87,8 +100,8 @@ public class MyRecyclerAdapterHome extends RecyclerView.Adapter<MyRecyclerAdapte
         holder.tv_second_post.setText(singleFeed.getSecond_post());
         holder.tv_likes_1.setText(String.valueOf(singleFeed.getLikesIn1()));
         holder.tv_likes_2.setText(String.valueOf(singleFeed.getLikesIn2()));
-        holder.iv_post1.setImageResource(R.mipmap.punchit_main);
-        holder.iv_post2.setImageResource(R.mipmap.user_icon);
+        loadImages(singleFeed.getImage1(), holder.iv_post1);
+        loadImages(singleFeed.getImage2(), holder.iv_post2);
 
         holder.iv_share.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,4 +168,45 @@ public class MyRecyclerAdapterHome extends RecyclerView.Adapter<MyRecyclerAdapte
         void commentPage(int position);
     }
 
+
+    private void loadImages(ParseFile thumbnail, final ImageView img) {
+
+        if (thumbnail != null) {
+            thumbnail.getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] data, ParseException e) {
+                    if (e == null) {
+                        Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+                        img.setImageBitmap(bmp);
+                    } else {
+                    }
+                }
+            });
+        } else {
+            img.setImageResource(R.mipmap.punchit_main);
+        }
+    }
+
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+    }
 }

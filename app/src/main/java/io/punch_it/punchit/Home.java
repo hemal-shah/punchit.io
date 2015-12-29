@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -15,13 +14,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -36,6 +34,7 @@ public class Home extends Fragment implements MyRecyclerAdapterHome.FeedButtonEv
     private MyRecyclerAdapterHome adapter;
     private SpacesHomeFeed spacesHomeFeed;
     private ProgressDialog progressDialog;
+
     HomeFeed object;
     String[] interest;
     SharedPreferences sp;
@@ -72,6 +71,7 @@ public class Home extends Fragment implements MyRecyclerAdapterHome.FeedButtonEv
         progressDialog.show();
         query.setLimit(10);
         query.whereContainedIn("TargetIntrests", Arrays.asList(interest));
+        Log.i(TAG, Arrays.asList(interest).toString());
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> feedList, ParseException e) {
@@ -96,10 +96,13 @@ public class Home extends Fragment implements MyRecyclerAdapterHome.FeedButtonEv
                         @SuppressWarnings("unchecked")
                         ArrayList<String> numberOfLikes2 = (ArrayList<String>) singleFeed.get("Punchers2");
 
-                        int like1 = (numberOfLikes1 != null)? numberOfLikes1.size():0;
-                        int like2 = (numberOfLikes2 != null)? numberOfLikes2.size():0;
+                        int like1 = (numberOfLikes1 != null) ? numberOfLikes1.size() : 0;
+                        int like2 = (numberOfLikes2 != null) ? numberOfLikes2.size() : 0;
 
-                        object = new HomeFeed(name, question, post1, post2, "Sample comment", date, like1, like2);
+                        ParseFile image1 = (ParseFile) singleFeed.get("Image1");
+                        ParseFile image2 = (ParseFile) singleFeed.get("Image2");
+                        ParseFile ProfilePicture = (ParseFile) user.get("ProfilePicture");
+                        object = new HomeFeed(name, question, post1, post2, "Sample comment", date, like1, like2,image1,image2,ProfilePicture);
                         feedsList.add(object);
                     }
                 } else {

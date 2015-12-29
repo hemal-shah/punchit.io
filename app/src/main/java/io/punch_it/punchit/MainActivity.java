@@ -5,11 +5,8 @@ import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseUser;
-
 
 public class MainActivity extends AppCompatActivity {
 
