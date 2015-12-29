@@ -56,9 +56,18 @@ public class MyRecyclerAdapterHome extends RecyclerView.Adapter<MyRecyclerAdapte
 
         Calendar current = Calendar.getInstance();
         int currentHours = current.get(Calendar.HOUR_OF_DAY);
+
+
         int currentMin = current.get(Calendar.MINUTE);
         int currentMonth = current.get(Calendar.MONTH);
         int currentDay = current.get(Calendar.DAY_OF_WEEK);
+
+        if (currentHours >= 5) {
+            currentHours -= 5;
+        } else {
+            currentHours = 24 - (5 - currentHours);
+            currentDay--;
+        }
 
         String time;
 
@@ -86,12 +95,9 @@ public class MyRecyclerAdapterHome extends RecyclerView.Adapter<MyRecyclerAdapte
 
         String time = getTimeInFormat(singleFeed.getDate());
 
-        try {
-            new DownloadImageTask(holder.imageView)
-                    .execute(singleFeed.getProfilePicture().getUrl());
-        } catch (Exception e) {
-            Log.d("MyApp", e.toString());
-        }
+
+        new DownloadImageTask(holder.imageView).execute(singleFeed.getProfilePicture().getUrl());
+
 
         holder.tv_home.setText(singleFeed.getUser());
         holder.tv_time_home.setText(time);
@@ -169,7 +175,7 @@ public class MyRecyclerAdapterHome extends RecyclerView.Adapter<MyRecyclerAdapte
     }
 
 
-    private void loadImages(ParseFile thumbnail, final ImageView img) {
+    private void loadImages(final ParseFile thumbnail, final ImageView img) {
 
         if (thumbnail != null) {
             thumbnail.getDataInBackground(new GetDataCallback() {
@@ -178,7 +184,6 @@ public class MyRecyclerAdapterHome extends RecyclerView.Adapter<MyRecyclerAdapte
                     if (e == null) {
                         Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
                         img.setImageBitmap(bmp);
-                    } else {
                     }
                 }
             });
@@ -208,5 +213,10 @@ public class MyRecyclerAdapterHome extends RecyclerView.Adapter<MyRecyclerAdapte
             return mIcon11;
         }
 
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            this.bmImage.setImageBitmap(bitmap);
+        }
     }
 }

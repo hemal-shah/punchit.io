@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_new_punch"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -11,13 +12,124 @@
         android:background="?attr/colorPrimary"
         app:layout_scrollFlags="scroll|enterAlways" />
 
-    <TextView
-        android:id="@+id/textView"
+    <EditText
+        android:id="@+id/et_title_new_punch"
+        android:layout_below="@+id/toolbar_main_punch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:singleLine="true"
+        android:hint="@string/enter_title"
+        android:textColor="#000"
+        android:textSize="20sp"
+        android:textColorHighlight="@color/primary_light"
+        />
+
+    <LinearLayout
+        android:id="@+id/ll_new_punch"
+        android:orientation="horizontal"
+        android:layout_below="@+id/et_title_new_punch"
+        android:layout_width="match_parent"
+        android:baselineAligned="false"
+        android:weightSum="2"
+        android:layout_marginTop="12dp"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="300dp">
+
+            <ImageView
+                android:id="@+id/iv_post1_new_punch"
+                android:src="@mipmap/ic_launcher"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/post1_select"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <EditText
+                android:id="@+id/et_post1_new_punch"
+                android:layout_alignParentBottom="true"
+                android:hint="@string/title1"
+                android:textColor="#000"
+                android:textSize="20sp"
+                android:singleLine="true"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="300dp">
+
+            <ImageView
+                android:id="@+id/iv_post2_new_punch"
+                android:src="@mipmap/ic_launcher"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/post1_select"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <EditText
+                android:id="@+id/et_post2_new_punch"
+                android:layout_alignParentBottom="true"
+                android:hint="@string/title1"
+                android:textSize="20sp"
+                android:singleLine="true"
+                android:textColor="#000"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bt_summary_new_punch"
+        android:layout_width="wrap_content"
+        android:background="@color/primary_light"
+        android:textColorHighlight="#fff"
+        android:padding="2dp"
+        android:textAllCaps="true"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:hint="@string/tag_community"
+        android:textSize="25sp"
+        android:textColor="#000"
+        android:layout_below="@+id/ll_new_punch"
+        android:layout_centerHorizontal="true" />
+
+    <ProgressBar
+        android:id="@+id/pb_main_punch"
+        style="?android:attr/progressBarStyleLarge"
+        android:progressDrawable="@drawable/circular_progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="main punch..."
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#000"
-        android:textSize="40sp" />
-</LinearLayout>
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_new_punch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabSize="normal"
+        app:theme="@style/AppTheme"
+        android:src="@mipmap/next_white"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="12dp"
+        />
+
+</RelativeLayout>

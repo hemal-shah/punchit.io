@@ -26,6 +26,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.parse.FunctionCallback;
+import com.parse.Parse;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -54,6 +55,9 @@ public class abc extends AppCompatActivity implements View.OnClickListener {
     EditText et ;
     InterestItems singleInterest;
     boolean isFirstTime;
+    SharedPreferences sp;
+    SharedPreferences.Editor editor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +65,14 @@ public class abc extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.listview);
         setUpActivity();
 
-
-        final SharedPreferences sp = getSharedPreferences("UserFirstTime", Context.MODE_PRIVATE);
-        final SharedPreferences.Editor editor = sp.edit();
+        sp = getSharedPreferences("UserFirstTime", Context.MODE_APPEND);
+        editor = sp.edit();
         isFirstTime = sp.getBoolean("FirstTimeLoggedIn", true);
         if (!isFirstTime) {
-            editor.putString("UserInterest", getInterestItems());
+            String interest = ParseCloudApp.getInterestItems();
+            editor.putString("UserInterest", interest);
+            Log.i(TAG, interest);
+            editor.apply();
             startActivity(new Intent(abc.this, MainFiveFragmentDisplay.class));
             abc.this.finish();
         }
@@ -147,22 +153,6 @@ public class abc extends AppCompatActivity implements View.OnClickListener {
                 break;
         }
         return false;
-    }
-
-    public String getInterestItems(){
-        final StringBuilder sb = new StringBuilder();
-
-        ParseCloud.callFunctionInBackground("GetUserIntrest", new HashMap<String, Object>(), new FunctionCallback<Object>() {
-            @Override
-            public void done(Object o, ParseException e) {
-                @SuppressWarnings("unchecked")
-                ArrayList<String> list = (ArrayList<String>) o;
-                for (String string : list) {
-                    sb.append(string).append(",");
-                }
-            }
-        });
-        return (sb.length() == 0)?"":sb.toString();
     }
 
 

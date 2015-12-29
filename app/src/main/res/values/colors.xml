@@ -6,6 +6,8 @@
     <color name="accent">#03A9F4</color>
     <color name="icons">#FFFFFF</color>
     <color name="textColor">#FFF</color>
+    <color name="pressed_color">#4d90fe</color>
+    <color name="default_color">#ffffff</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>
     <color name="divider">#B6B6B6</color>

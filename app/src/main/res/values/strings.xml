@@ -25,4 +25,9 @@
     <string name="name">Name</string>
     <string name="time">TimeHere</string>
     <string name="search">Search Interest..</string>
+    <string name="enter_title">Enter Title</string>
+    <string name="post1_select">Select Post 1</string>
+    <string name="title1">Title 1</string>
+    <string name="tag_community">Tag Community</string>
+    <string name="done">Done!</string>
 </resources>

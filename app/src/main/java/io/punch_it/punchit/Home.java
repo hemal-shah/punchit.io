@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -36,9 +37,6 @@ public class Home extends Fragment implements MyRecyclerAdapterHome.FeedButtonEv
     private ProgressDialog progressDialog;
 
     HomeFeed object;
-    String[] interest;
-    SharedPreferences sp;
-
     public Home() {
         //Required for now
     }
@@ -46,8 +44,6 @@ public class Home extends Fragment implements MyRecyclerAdapterHome.FeedButtonEv
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sp = getActivity().getSharedPreferences("UserFirstTime", Context.MODE_PRIVATE);
-        interest = sp.getString("UserInterest", "").split(",");
     }
 
     @Override
@@ -70,8 +66,9 @@ public class Home extends Fragment implements MyRecyclerAdapterHome.FeedButtonEv
         progressDialog.setIndeterminate(true);
         progressDialog.show();
         query.setLimit(10);
-        query.whereContainedIn("TargetIntrests", Arrays.asList(interest));
-        Log.i(TAG, Arrays.asList(interest).toString());
+        query.orderByDescending("createdAt");
+        Log.i(TAG, Arrays.asList(ParseCloudApp.getInterestItems().split(",")).toString());
+        query.whereContainedIn("TargetIntrests", Arrays.asList(ParseCloudApp.getInterestItems().split(",")));
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> feedList, ParseException e) {
@@ -101,8 +98,13 @@ public class Home extends Fragment implements MyRecyclerAdapterHome.FeedButtonEv
 
                         ParseFile image1 = (ParseFile) singleFeed.get("Image1");
                         ParseFile image2 = (ParseFile) singleFeed.get("Image2");
-                        ParseFile ProfilePicture = (ParseFile) user.get("ProfilePicture");
-                        object = new HomeFeed(name, question, post1, post2, "Sample comment", date, like1, like2,image1,image2,ProfilePicture);
+                        ParseFile ProfilePicture = null;
+                        try {
+                            ProfilePicture = (ParseFile) user.fetchIfNeeded().get("ProfilePicture");
+                        } catch (ParseException e1) {
+                            e1.printStackTrace();
+                        }
+                        object = new HomeFeed(name, question, post1, post2, date, like1, like2,image1,image2,ProfilePicture);
                         feedsList.add(object);
                     }
                 } else {
