@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="user_settings"
+        android:title="Settings">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="vibrate_phone"
+            android:title="Vibrate" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="volume_phone"
+            android:title="Notification Sounds" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="push_notification"
+            android:title="Push Notification" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Support">
+        <Preference
+            android:key="about_us"
+            android:title="About us">
+        </Preference>
+
+        <Preference
+            android:key="contact_us"
+            android:title="Contact">
+        </Preference>
+    </PreferenceCategory>
+</PreferenceScreen>

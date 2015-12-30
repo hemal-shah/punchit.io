@@ -3,15 +3,19 @@ package io.punch_it.punchit;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +28,7 @@ public class MainFiveFragmentDisplay extends AppCompatActivity implements View.O
     final private static String TAG = MainFiveFragmentDisplay.class.getSimpleName();
     private int[] tabIcons = {
             R.mipmap.home_white,
-            R.mipmap.search_white,
             R.mipmap.notify_white,
-            R.mipmap.settings_white
     };
 
     FloatingActionButton fab;
@@ -45,21 +47,13 @@ public class MainFiveFragmentDisplay extends AppCompatActivity implements View.O
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-        tabLayout.getTabAt(2).setIcon(tabIcons[2]);
-        tabLayout.getTabAt(3).setIcon(tabIcons[3]);
     }
 
     private void setupViewPager(ViewPager viewPager) {
-
-        Log.i(TAG, "3");
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new Home(), "HOME");
-        adapter.addFrag(new Search(), "SEARCH");
         adapter.addFrag(new NotificationAcitivty(), "NOTIFICATION");
-        adapter.addFrag(new SettingsActivity(), "SETTINGS");
         viewPager.setAdapter(adapter);
-
-        Log.i(TAG, "4");
     }
 
     @Override
@@ -98,6 +92,39 @@ public class MainFiveFragmentDisplay extends AppCompatActivity implements View.O
         @Override
         public CharSequence getPageTitle(int position) {
             return null;
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_fragment, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        switch (id){
+            case R.id.settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            case R.id.log_out:
+                logOutUser();
+                return true;
+            case R.id.user_profile:
+                startActivity(new Intent(this, UserProfile.class));
+                return true;
+        }
+        return false;
+    }
+
+    private void logOutUser() {
+        ParseUser.logOut();
+        if(ParseUser.getCurrentUser() == null){
+            startActivity(new Intent(this, LoginSignupActivity.class));
+            MainFiveFragmentDisplay.this.finish();
         }
     }
 }

@@ -76,9 +76,9 @@ public class Home extends Fragment implements MyRecyclerAdapterHome.FeedButtonEv
 
         final ParseQuery<ParseObject> query = ParseQuery.getQuery("Posts");
         query.setLimit(5);
-        query.orderByAscending("createdAt");
         query.whereContainedIn("TargetIntrests", interests);
         query.whereNotContainedIn("objectId", objectIds);
+        query.orderByDescending("createdAt");
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> feedList, ParseException e) {

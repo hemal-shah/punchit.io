@@ -30,4 +30,7 @@
     <string name="title1">Title 1</string>
     <string name="tag_community">Tag Community</string>
     <string name="done">Done!</string>
+    <string name="settings">Settings</string>
+    <string name="profile">Profile</string>
+    <string name="log_out">Log Out!</string>
 </resources>

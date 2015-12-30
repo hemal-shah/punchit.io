@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="updateIntervalValues">
+
+        <item name = "1000">1000</item>
+        <item name = "2000">2000</item>
+        <item name = "3000">3000</item>
+        <item name = "5000">5000</item>
+        <item name = "10000">10000</item>
+
+    </string-array>
+
+
+    <string-array name="updateValues">
+
+        <item name = "1000">Every 1 second</item>
+        <item name = "2000">Every 2 second</item>
+        <item name = "3000">Every 3 second</item>
+        <item name = "5000">Every 5 second</item>
+        <item name = "10000">Every 10 second</item>
+
+    </string-array>
+</resources>
